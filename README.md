@@ -80,6 +80,20 @@ This NuGet package exposes a Form Control Extender that can be applied to custom
 
 Since the Page Type field that the extended Form Control operates on is a "Field without database representation", the Page Type database table does not need modified and Content Managers don't lose any of the standard content management functionality they are used to.
 
+### Querying XML via SQL
+
+Normally Page CustomData fields should to be used to store data that we want access to when we retrieve a Page from the database, in which case the `DocumentCustomData` or `NodeCustomData` will handle the XML deserialization for you.
+
+However, if we want to filter in SQL on these XML columns, we can cast the column to the SQL XML type and filter on its value.
+
+Using the setup in the steps above, this query would return all Pages (of any Page Type) that have "Show In Sitemap" set to `true`.
+
+```sql
+SELECT *
+FROM CMS_Document
+WHERE CAST(DocumentCustomData as XML).value('(//CustomData/ShowInSitemap/text())[1]', 'bit') = 1
+```
+
 ## References
 
 ### Kentico Xperience
