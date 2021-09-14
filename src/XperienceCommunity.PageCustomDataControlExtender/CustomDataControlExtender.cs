@@ -13,10 +13,16 @@ namespace XperienceCommunity.PageCustomDataControlExtender
     /// </summary>
     public class CustomDataControlExtender : ControlExtender<FormEngineUserControl>
     {
-        private IEventLogService Log => Service.Resolve<IEventLogService>();
+        public const string ControlUseDocumentCustomDataPropertyName = "UseDocumentCustomData";
 
-        public string CustomDataColumnName => Control.GetValue("CustomDataColumnName", "");
-        public bool UseDocumentCustomData => Control.GetValue("UseDocumentCustomData", true);
+        private IEventLogService Log =>
+            Service.Resolve<IEventLogService>();
+
+        /// <summary>
+        /// If true, <see cref="TreeNode.DocumentCustomData"/> will store the <see cref="FormEngineUserControl.Value"/>, otherwise
+        /// the value will be stored in <see cref="TreeNode.NodeCustomData"/>. Defaults to <see cref="TreeNode.DocumentCustomData"/>.
+        /// </summary>
+        public bool UseDocumentCustomData => Control.GetValue(ControlUseDocumentCustomDataPropertyName, true);
 
         public override void OnInit() => Control.Init += Control_Init;
 
@@ -24,14 +30,14 @@ namespace XperienceCommunity.PageCustomDataControlExtender
         {
             bool isExtenderValid = true;
 
-            if (string.IsNullOrWhiteSpace(CustomDataColumnName))
+            if (string.IsNullOrWhiteSpace(Control.Field))
             {
                 isExtenderValid = false;
 
                 Log.LogError(
                     nameof(CustomDataControlExtender),
                     "INVALID_CONFIGURATION",
-                    $"The Form Control must have a {nameof(CustomDataColumnName)} property with a non-empty value");
+                    $"The Form Control must have a {nameof(Control.Field)} with a non-empty value");
             }
             if (Control.Form is null)
             {
@@ -61,17 +67,9 @@ namespace XperienceCommunity.PageCustomDataControlExtender
 
             Control.Form.OnGetControlValue += Form_OnGetControlValue;
             Control.Form.OnAfterDataLoad += Form_OnAfterDataLoad;
-            Control.Changed += Control_Changed;
-        }
 
-        private void Control_Changed(object sender, EventArgs e)
-        {
-            if (!(Control.Data is TreeNode page))
-            {
-                return;
-            }
-
-            SyncValueToPage(Control.Value, page);
+            Control.Form.FieldControls.Add(Control.Field, Control);
+            Control.Data.ColumnNames.Add(Control.Field);
         }
 
         private void Form_OnAfterDataLoad(object sender, EventArgs e)
@@ -81,7 +79,9 @@ namespace XperienceCommunity.PageCustomDataControlExtender
                 return;
             }
 
-            SyncPageToValue(page);
+            Control.Value = UseDocumentCustomData
+                ? page.DocumentCustomData.GetValue(Control.Field)
+                : page.NodeCustomData.GetValue(Control.Field);
         }
 
         private void Form_OnGetControlValue(object sender, FormEngineUserControlEventArgs e)
@@ -91,19 +91,14 @@ namespace XperienceCommunity.PageCustomDataControlExtender
                 return;
             }
 
-            SyncValueToPage(Control.Value, page);
+            if (e.ColumnName.Equals(Control.Field) && UseDocumentCustomData)
+            {
+                page.DocumentCustomData.SetValue(Control.Field, Control.Value);
+            }
+            else if (e.ColumnName.Equals(Control.Field) && !UseDocumentCustomData)
+            {
+                page.NodeCustomData.SetValue(Control.Field, Control.Value);
+            }
         }
-
-        private void SyncValueToPage(object value, TreeNode page)
-        {
-            bool _ = UseDocumentCustomData
-                ? page.DocumentCustomData.SetValue(CustomDataColumnName, value)
-                : page.NodeCustomData.SetValue(CustomDataColumnName, value);
-        }
-
-        private void SyncPageToValue(TreeNode page) =>
-            Control.Value = UseDocumentCustomData
-                ? page.DocumentCustomData.GetValue(CustomDataColumnName)
-                : page.NodeCustomData.GetValue(CustomDataColumnName);
     }
 }

@@ -16,7 +16,55 @@ This package is compatible with Kentico Xperience 13.
    dotnet add package XperienceCommunity.PageCustomDataControlExtender
    ```
 
-1.
+1. Open the Administration application and navigate to the "Administration Interface" module in the menu
+
+   ![Administration Interface](./images/01-administration-interface.jpg)
+
+1. Create a new Form Control, selecting to inherit from the Form Control you would like to use to store data in a Page's CustomData field
+
+   ![New Form Control](./images/02-new-inheriting-form-control.jpg)
+
+1. After creating the new Form Control, assign the correct settings to that the Control is available for Page Type fields of the correct data type
+
+   ![Control Settings](./images/03-assign-control-settings.jpg)
+
+1. (Optional) Create a custom Property for this Form Control that allows it to store data in the correct Page field location for each use:
+
+   **Note**: If this Property is not defined, the Control will default to storing the Control value in `DocumentCustomData`
+
+   - `UseDocumentCustomData` - Data type: Boolean, Required: true
+
+     ![UseDocumentCustomData Field](./images/04-use-document-customdata.jpg)
+
+1. Create a new field in your Page Type, using the new Form Control:
+
+   Make sure you select "Field without database representation" as the `Field type`, select a `Data type` that
+   your Form Control is configured to work with, and also select the new custom `Form control` in the drop down.
+
+   **Note**: The name of the field (`ShowInSitemap` in the screenshot) is the XML element that will contain the value
+   in the Page CustomData field.
+
+   ![New Page Type field](./images/05-new-page-type-field.jpg)
+
+1. (Optional) Register the included custom `VersionManager` to make `DocumentCustomData` a versioned Page field:
+
+   Follow the instructions for [Registering providers via the web.config](https://docs.xperience.io/custom-development/customizing-providers/registering-providers-via-the-web-config) in the Kentico Xperience documentation.
+
+   **Note**: By default, `DocumentCustomData` is not versioned, so changes to the field will update the `CMS_Document` table,
+   even for Pages under workflow.
+
+   ```xml
+   <section name="cms.extensibility" type="CMS.Base.CMSExtensibilitySection, CMS.Base" />
+
+   <cms.extensibility>
+      <managers>
+         <add name="WorkflowManager"
+               assembly="XperienceCommunity.PageCustomDataControlExtender"
+               type="XperienceCommunity.PageCustomDataControlExtender.CustomDataVersionManager" />
+         ...
+      </managers>
+   </cms.extensibility>
+   ```
 
 ## How Does It Work?
 
