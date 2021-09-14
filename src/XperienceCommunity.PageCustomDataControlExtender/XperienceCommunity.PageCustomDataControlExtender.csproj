@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>7.3</LangVersion>
+    <Description>
+      A Kentico Xperience Form Control Extender that sync the Form Control value to/from Page CustomData fields
+    </Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Kentico.Xperience.Libraries" Version="13.0.16" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="CMS.AssemblyDiscoverableAttribute">
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="CMS.Base.Web.UI">
+      <HintPath>..\Lib\CMS.Base.Web.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="CMS.FormEngine.Web.UI">
+      <HintPath>..\Lib\CMS.FormEngine.Web.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="CMS.PortalEngine.Web.UI">
+      <HintPath>..\Lib\CMS.PortalEngine.Web.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\images\wv-logo.png" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+
+</Project>
