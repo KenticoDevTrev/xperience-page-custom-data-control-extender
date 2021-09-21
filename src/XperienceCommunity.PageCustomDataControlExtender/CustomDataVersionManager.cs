@@ -17,7 +17,7 @@ namespace XperienceCommunity.PageCustomDataControlExtender
 
         protected override bool IsVersionedDocumentColumnInternal(string columnName)
         {
-            if (string.Equals(columnName, "DocumentCustomData", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(columnName, nameof(TreeNode.DocumentCustomData), StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }

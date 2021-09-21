@@ -15,8 +15,22 @@ namespace XperienceCommunity.PageCustomDataControlExtender
     {
         public const string ControlUseDocumentCustomDataPropertyName = "UseDocumentCustomData";
 
-        private IEventLogService Log =>
-            Service.Resolve<IEventLogService>();
+        private IEventLogService log;
+
+        private IEventLogService Log
+        {
+            get
+            {
+                if (log is object)
+                {
+                    return log;
+                }
+
+                log = Service.Resolve<IEventLogService>();
+
+                return log;
+            }
+        }
 
         /// <summary>
         /// If true, <see cref="TreeNode.DocumentCustomData"/> will store the <see cref="FormEngineUserControl.Value"/>, otherwise
@@ -91,11 +105,11 @@ namespace XperienceCommunity.PageCustomDataControlExtender
                 return;
             }
 
-            if (e.ColumnName.Equals(Control.Field) && UseDocumentCustomData)
+            if (e.ColumnName.Equals(Control.Field, StringComparison.InvariantCultureIgnoreCase) && UseDocumentCustomData)
             {
                 page.DocumentCustomData.SetValue(Control.Field, Control.Value);
             }
-            else if (e.ColumnName.Equals(Control.Field) && !UseDocumentCustomData)
+            else if (e.ColumnName.Equals(Control.Field, StringComparison.InvariantCultureIgnoreCase) && !UseDocumentCustomData)
             {
                 page.NodeCustomData.SetValue(Control.Field, Control.Value);
             }

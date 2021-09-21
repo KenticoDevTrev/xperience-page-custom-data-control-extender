@@ -58,7 +58,7 @@ This package is compatible with Kentico Xperience 13.
 
    <cms.extensibility>
       <managers>
-         <add name="WorkflowManager"
+         <add name="VersionManager"
                assembly="XperienceCommunity.PageCustomDataControlExtender"
                type="XperienceCommunity.PageCustomDataControlExtender.CustomDataVersionManager" />
          ...
