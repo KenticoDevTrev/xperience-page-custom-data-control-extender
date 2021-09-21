@@ -1,4 +1,4 @@
-# Xperience Page Template Utilities
+# Xperience Page Custom Data Control Extender
 
 [![NuGet Package](https://img.shields.io/nuget/v/XperienceCommunity.PageCustomDataControlExtender.svg)](https://www.nuget.org/packages/XperienceCommunity.PageCustomDataControlExtender)
 
