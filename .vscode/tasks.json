@@ -36,6 +36,18 @@
         "reveal": "silent"
       },
       "problemMatcher": "$msCompile"
+    },
+
+    {
+      "label": "clean",
+      "command": "dotnet",
+      "type": "shell",
+      "args": ["clean"],
+      "group": "build",
+      "presentation": {
+        "reveal": "silent"
+      },
+      "problemMatcher": "$msCompile"
     }
   ]
 }
